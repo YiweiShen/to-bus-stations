@@ -37,14 +37,6 @@ jobs:
           retry: true
           save-name: go-bus-routes
 
-      - name: Build and Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v4
-        with:
-          branch: main # Pushes the updates to the master branch.
-          folder: fetch-api-data-action # The location of the data.json file saved by the Fetch API Data action.
-          target-folder: data # Saves the data into the 'data' directory on the master branch.
-          clean: false
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -61,14 +53,10 @@ jobs:
         working-directory: ./processor
         run: python extract-stops.py
 
-      - name: Clean up
-        run: rm -rf fetch-api-data-action
-
-      - name: Commit and push changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git pull origin main
-          git add -A
-          git commit -m "Commit changes from GitHub Actions workflow"
-          git push origin main
+      - name: Build and Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          branch: main # Pushes the updates to the master branch.
+          folder: fetch-api-data-action # The location of the data.json file saved by the Fetch API Data action.
+          target-folder: data # Saves the data into the 'data' directory on the master branch.
+          clean: false
